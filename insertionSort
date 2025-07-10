@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include<stdlib.h>
+// version 1
+void swap(int *a, int* b){
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+void insertion_sort(int a[], int n){
+    for(int i = 0; i< n; i++){
+        int key = a[i];
+        int j = i;
+        while(j>0 && a[j-1]>key){
+            a[j]= a[j-1];
+            j--;
+        }
+        swap(&a[j],&key);
+
+    }
+}
+int main(){
+    int n;
+    freopen("dt.txt","r", stdin);
+     scanf("%d",&n);
+    int a[n];
+    for(int i =0 ; i < n; i++){
+        scanf("%d",&a[i]);
+    }
+    insertion_sort(a,n);
+    for(int i =0 ; i < n; i++){
+        printf("%d ",a[i]);
+    }
+}
