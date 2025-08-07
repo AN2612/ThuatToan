@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX_SIZE 100005
+
+typedef struct NodeTag {
+    int key;
+    struct NodeTag* next;
+} Node;
+
+typedef struct {
+    Node* buckets[MAX_SIZE];
+    int size;
+} HashTable;
+
+int h(int x) {
+    return x % MAX_SIZE;
+}
+
+void make_null(HashTable* pH) {
+    for (int i = 0; i < MAX_SIZE; i++) {
+        pH->buckets[i] = NULL; 
+    }
+    pH->size = 0;
+}
+
+int search(HashTable* pH, int k) {
+    int index = h(k);
+    Node* p = pH->buckets[index];
+    while (p != NULL) {
+        if (p->key == k) {
+            return 1;
+        }
+        p = p->next;
+    }
+    return 0;
+}
+
+void insertAtHead(HashTable* pH, int k) {
+    int index = h(k);
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->key = k;
+    newNode->next = pH->buckets[index];
+    pH->buckets[index] = newNode;
+    pH->size++;
+}
+
+void deleteNode(HashTable* pH, int k) {
+    int index = h(k);
+    Node* p = pH->buckets[index];
+    Node* prev = NULL;
+    while (p != NULL) {
+        if (p->key == k) {
+            if (prev == NULL) {
+                pH->buckets[index] = p->next;
+            } else {
+                prev->next = p->next;
+            }
+            free(p);
+            pH->size--;
+            return;
+        }
+        prev = p;
+        p = p->next;
+    }
+}
+
+void freeHashTable(HashTable* pH) {
+    for (int i = 0; i < MAX_SIZE; i++) {
+        Node* p = pH->buckets[i];
+        while (p != NULL) {
+            Node* temp = p;
+            p = p->next;
+            free(temp);
+        }
+        pH->buckets[i] = NULL;
+    }
+    pH->size = 0;
+}
+
+int main() {
+    HashTable H;
+    make_null(&H);
+    int n, q;
+    scanf("%d %d", &n, &q);
+    for (int i = 0; i < n; i++) {
+        int temp;
+        scanf("%d", &temp);
+        insertAtHead(&H, temp);
+    }
+    for (int i = 0; i < q; i++) {
+        int temp;
+        scanf("%d", &temp);
+        printf("%s", search(&H, temp) ? "YES " : "NO ");
+    }
+    freeHashTable(&H); 
+    return 0;
+}
