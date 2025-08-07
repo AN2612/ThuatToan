@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_N 1000000
+
+int freq[MAX_N + 1] = {0};  // mảng đếm số lượng mỗi loại dĩa
+
+int main() {
+    int n;
+    scanf("%d", &n);  // số dĩa tối đa nhà hàng phục vụ
+
+    int x;
+    // Đọc danh sách các món ăn (cho đến khi EOF hoặc lỗi)
+    while (scanf("%d", &x) == 1) {
+        if (x <= n) freq[x]++;
+    }
+
+    int total = 0, count = 0;
+
+    for (int i = 1; i <= n; i++) {
+        while (freq[i] > 0 && total + i <= n) {
+            total += i;
+            count++;
+            freq[i]--;
+        }
+        if (total >= n) break;  // không cần duyệt tiếp
+    }
+
+    printf("%d\n", count);
+    return 0;
+}
